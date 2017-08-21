@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<title>bootstrap分页</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/index.css" />
+</head>
+<body>
+<ul class="list J_newsList">
+	<li class="item">
+		<a href="#">暗杀神多阿斯达很大声的打</a>
+		<span class="time">2017-03-14</span>
+	</li>
+	<li class="item">
+		<a href="#">暗杀神多阿斯达很大声的打</a>
+		<span class="time">2017-03-14</span>
+	</li>
+	<li class="item">
+		<a href="#">暗杀神多阿斯达很大声的打</a>
+		<span class="time">2017-03-14</span>
+	</li>
+	<li class="item">
+		<a href="#">暗杀神多阿斯达很大声的打</a>
+		<span class="time">2017-03-14</span>
+	</li>
+	<li class="item">
+		<a href="#">暗杀神多阿斯达很大声的打</a>
+		<span class="time">2017-03-14</span>
+	</li>
+</ul>
+<div class="page_wrapper">
+	<ul class="J_pagination"></ul>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-paginator.min.js"></script>
+<script>
+$(function() {
+	var newsList=$(".J_newsList");
+	//默认分页使用数据
+	var pageData={
+		currentPage:1,		//页码
+		numberOfPages:5,	//分页栏展示数
+		limit:10		//一页显示多少条数据
+	}
+	//后台获取到的数据
+	var newsData={
+		totalCount:98,		//数据总数
+		data:[				//某一页的数据10条
+			{id:1,title:"阿凡达航大富豪是否是大法官",releaseTime:"2017-03-14"},
+			{id:2,title:"阿凡达航大富豪是否是大法官",releaseTime:"2017-03-14"},
+			{id:3,title:"阿凡达航大富豪是否是大法官",releaseTime:"2017-03-14"},
+			{id:4,title:"阿凡达航大富豪是否是大法官",releaseTime:"2017-03-14"},
+			{id:5,title:"阿凡达航大富豪是否是大法官",releaseTime:"2017-03-14"},
+			{id:6,title:"阿凡达航大富豪是否是大法官",releaseTime:"2017-03-14"},
+			{id:7,title:"阿凡达航大富豪是否是大法官",releaseTime:"2017-03-14"},
+			{id:8,title:"阿凡达航大富豪是否是大法官",releaseTime:"2017-03-14"},
+			{id:9,title:"阿凡达航大富豪是否是大法官",releaseTime:"2017-03-14"},
+			{id:10,title:"阿凡达航大富豪是否是大法官",releaseTime:"2017-03-14"},
+		]
+	}
+	function getData(pageNum, limit){
+		$.ajax({
+			url:`/getData?pageNum=${pageNum}&limit=${limit}`,
+			type:"get",
+			dataType:"json",
+			success:function(data){
+				console.log(data);
+				newsData=[];
+				
+	//			renderPage();
+			}
+		})
+	}
+	//默认查询第一页的数据
+	getData(pageData.currentPage,pageData.limit);
+	//渲染列表
+	function renderDom(data){
+		newsList.empty();
+		$.each(data,function(i,v){
+			var ele=`
+			<li class="item">
+				<a href="#">${v.title}</a>
+				<span class="time">${v.releaseTime}</span>
+			</li>
+			`;
+			newsList.append(ele);
+			
+		})
+	}
+	renderDom(newsData.data);
+	//渲染分页
+	function renderPage(totalCount){
+		var totalCount=newsData.totalCount;
+		var totalPages=Math.ceil(totalCount/pageData.limit);
+		$(".J_pagination").bootstrapPaginator({
+			bootstrapMajorVersion: 3, 	//版本2的页码容器必须是div,版本3必须为ul
+			size:"small",				//控件大小
+			currentPage:pageData.currentPage,	//当前页码
+            totalPages: totalPages,				//总页数
+        	numberOfPages:pageData.numberOfPages,	//分页栏显示数
+//			shouldShowPage:function(type, page, current){
+//				switch (type) {
+//                  case "first":
+//                      return true;
+//                  case "prev":
+//                      return true;
+//                  case "next":
+//                      return true;
+//                  case "last":
+//                      return true;
+//                  case "page":
+//                      return true;
+//              }
+//			},
+			shouldShowPage:true,
+			itemTexts: function (type, page, current) {
+                switch (type) {
+                    case "first":
+                        return "首页";
+                    case "prev":
+                        return "上一页";
+                    case "next":
+                        return "下一页";
+                    case "last":
+                        return "末页";
+                    case "page":
+                        return page;
+                }
+            },
+			onPageChanged: function(event, oldPage, newPage) {
+				getData(newPage,pageData.limit);
+			}
+		});
+	}
+	renderPage();
+})
+</script>
+</body>
+
+</html>

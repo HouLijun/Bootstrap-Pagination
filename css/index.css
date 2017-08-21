@@ -1,0 +1,16 @@
+.list {
+  width: 900px;
+  margin: 20px auto;
+  list-style: none;
+}
+.item {
+  line-height: 50px;
+}
+.time {
+  float: right;
+}
+.page_wrapper {
+  width: 900px;
+  margin: auto;
+  text-align: right;
+}
